@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/demo_author?characterEncoding=utf8&useSSL=false
+    username: root
+    password: hex
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+  mvc:
+    static-path-pattern: /**
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
+
+server:
+  port: 9080

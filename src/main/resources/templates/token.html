@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div onclick="getInfo();">获取token</div>
+    <div onclick="postInfo();">点击</div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+        function getInfo(){
+            // $.ajax({
+            //     type: 'POST',
+            //     url: url,
+            //     data: data,
+            //     headers:{'Content-Type':'application/json;charset=utf8','organId':'1333333333'},
+            //     }).done(function(res){
+
+            //     }
+            // );
+            // token = localStorage.getItem('token')  // 从localStroge拿到token
+            $.ajax({
+                type: 'post',
+                url: 'http://127.0.0.1:9080/login',   // 请求验证jwt的路由
+                data:{name:'admin',password:'000000'},
+                // headers: { 'Authorization': 'Bearer '+token},    //这里有个坑点巨坑，在token前要加上'Bearer '这个是表示 token的类型，记住Bearer后面必须有一个空格，必须有，一定别忘了，不然会失败。只需要发送给后台，后台的jwt模块会自己验证，验证失败会报Authorization错误，验证成功将执行你的路由请求操作。
+                // contentType: "application/x-www-form-urlencoded",
+                success:function (res) {
+                //因为JWT是先验证再执行之后的路由操作，所以你请求成功JWT验证成功了才会返回参数，这里我后台返回的ok,前面后台代码有写
+                    // if (res=="ok"){
+                    //     $('body').css('display','block') //说明验证成功，验证成功再显示页面
+                    // }
+                    console.log("post请求成功");
+                    console.log(res.data.token);
+                    localStorage.setItem('token',res.data.token);
+                },
+                error:function (error) {
+                    // location.href='login.html'  //验证失败跳转回登录页面,ok大功告成
+                    console.log("error")
+                }
+            });
+        }
+        function postInfo(){
+            token = localStorage.getItem('token')  // 从localStroge拿到token
+            console.log(token);
+            $.ajax({
+                type: 'get',
+                url: 'http://127.0.0.1:9080/operatorInfo',   // 请求验证jwt的路由
+                headers: {
+                    'content-type':"application/json;charset=UTF-8",
+                    'Authorization': token
+                },    //'Bearer '+token这里有个坑点巨坑，在token前要加上'Bearer '这个是表示 token的类型，记住Bearer后面必须有一个空格，必须有，一定别忘了，不然会失败。只需要发送给后台，后台的jwt模块会自己验证，验证失败会报Authorization错误，验证成功将执行你的路由请求操作。
+                contentType: "application/x-www-form-urlencoded",
+                success:function (res) {
+                //因为JWT是先验证再执行之后的路由操作，所以你请求成功JWT验证成功了才会返回参数，这里我后台返回的ok,前面后台代码有写
+                    // if (res=="ok"){
+                    //     $('body').css('display','block') //说明验证成功，验证成功再显示页面
+                    // }
+                    console.log("get请求成功");
+                    console.log(res);
+                },
+                error:function (error) {
+                    // location.href='login.html'  //验证失败跳转回登录页面,ok大功告成
+                    console.log("error")
+                }
+            });
+
+//             $.ajax({
+//                 type: 'GET',
+//                 url: "http://192.168.31.143:8081/operatorInfo",
+//                 contentType: "application/json",
+//                 dataType: 'json',
+//                 cache: false,
+//                 async: true,
+//                 beforeSend: function (XMLHttpRequest) {
+//                     XMLHttpRequest.setRequestHeader("Authorization", token);
+//                 },
+//                 success: function (result) {
+//                     console.log("get请求成功");
+//                     console.log(res);
+//                 }
+//             });
+    };
+    </script>
+</body>
+</html>
